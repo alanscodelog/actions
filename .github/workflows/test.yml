@@ -1,9 +1,6 @@
 name: Build
 # not technically necessary because release also runs tests but this way the build badge is separate
 
-env:
- BRANCH_NAME: ${GITHUB_REF#refs/heads/}
-
 on:
   #TOCONFIGURE
   schedule:
@@ -21,8 +18,21 @@ jobs:
     if: "! contains(toJSON(github.event.commits.*.message), '[skip ci]')"
     runs-on: ubuntu-latest
     steps:
-     - name: Test
-       run: echo ${{ github.ref }} ${{ env.BRANCH_NAME }} ${GITHUB_REF#refs/heads/}
+     - name: Extract branch name
+       run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+       id: extracted
+     - name: Extract branch name 2
+       run: echo '::set-output name=branch::$(echo ${GITHUB_REF#refs/heads/})'
+       id: extracted2
+     - name: Extract branch name 3
+       run: echo "::set-output name=branch::$(echo ${GITHUB_REF#refs/heads/})"
+       id: extracted3
+   
+     - run: echo ${{ github.ref }}
+     - run: echo ${GITHUB_REF#refs/heads/}
+     - run: echo ${{ steps.extracted.outputs.branch }} 
+     - run: echo ${{ steps.extracted2.outputs.branch }}
+     - run: echo ${{ steps.extracted3.outputs.branch }}
       
      - name: Test1
        if: "! contains(${GITHUB_REF#refs/heads/}, 'master')"
