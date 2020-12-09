@@ -2,7 +2,7 @@ name: Build
 
 on:
   push:
-    branches: [ master, beta]
+    branches: [ master, beta ]
     
 jobs:
   build:
@@ -10,23 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
      - name: Extract branch name
-       run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-       id: extracted
-     - name: Extract branch name 2
-       run: echo '::set-output name=branch::$(echo ${GITHUB_REF#refs/heads/})'
-       id: extracted2
-     - name: Extract branch name 3
        run: echo "::set-output name=branch::$(echo ${GITHUB_REF#refs/heads/})"
-       id: extracted3
-   
-     - run: echo ${{ github.ref }}
-     - run: echo ${GITHUB_REF##refs/heads/}
-     - run: echo ${{ steps.extracted.outputs.branch }} 
-     - run: echo ${{ steps.extracted2.outputs.branch }}
-     - run: echo ${{ steps.extracted3.outputs.branch }}
+       id: extracted_branch
+ 
+     - run: echo ${{ steps.extracted_branch.outputs.branch }} 
       
-#      - name: Test1
-#        if: "! contains(${GITHUB_REF##refs/heads/}, 'master')"
-#        run: echo not on master
+     - name: Test1
+       if: "! contains(steps.extracted_branch.outputs.branch, 'master')"
+       run: echo not on master
       
-  
+     - name: Test1
+       if: "contains(steps.extracted_branch.outputs.branch, 'master')"
+       run: echo on master
