@@ -1,0 +1,30 @@
+name: Build
+# not technically necessary because release also runs tests but this way the build badge is separate
+
+env:
+ BRANCH_NAME: ${GITHUB_REF#refs/heads/}
+
+on:
+  #TOCONFIGURE
+  schedule:
+    # every first of the month at 12:00 noon GMT-3
+    # https://crontab.guru/#0_12_1_*_*
+    - cron:  '0 15 1 * *'
+  push:
+    branches: [ master ]
+  repository_dispatch:
+    types: [ build ]
+    # to trigger: curl -v -H "Accept: application/vnd.github.everest-preview+json" -H "Authorization: token $GH_TOKEN" https://api.github.com/repos/alanscodelog/TOREPONAME/dispatches -d '{ "event_type": "build" }'
+
+jobs:
+  build:
+    if: "! contains(toJSON(github.event.commits.*.message), '[skip ci]')"
+    runs-on: ubuntu-latest
+    - name: Test
+      run: echo ${{ github.ref }} ${{ env.BRANCH_NAME }} ${GITHUB_REF#refs/heads/}
+      
+    - name: Test1
+      if: "! contains(${GITHUB_REF#refs/heads/}, 'master')
+      run: echo not on master
+      
+  
