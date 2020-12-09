@@ -20,11 +20,12 @@ jobs:
   build:
     if: "! contains(toJSON(github.event.commits.*.message), '[skip ci]')"
     runs-on: ubuntu-latest
-    - name: Test
-      run: echo ${{ github.ref }} ${{ env.BRANCH_NAME }} ${GITHUB_REF#refs/heads/}
+    steps:
+     - name: Test
+       run: echo ${{ github.ref }} ${{ env.BRANCH_NAME }} ${GITHUB_REF#refs/heads/}
       
-    - name: Test1
-      if: "! contains(${GITHUB_REF#refs/heads/}, 'master')
-      run: echo not on master
+     - name: Test1
+       if: "! contains(${GITHUB_REF#refs/heads/}, 'master')"
+       run: echo not on master
       
   
