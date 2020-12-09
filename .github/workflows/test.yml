@@ -29,7 +29,7 @@ jobs:
        id: extracted3
    
      - run: echo ${{ github.ref }}
-     - run: echo ${GITHUB_REF#refs/heads/}
+     - run: echo ${GITHUB_REF##refs/heads/}
      - run: echo ${{ steps.extracted.outputs.branch }} 
      - run: echo ${{ steps.extracted2.outputs.branch }}
      - run: echo ${{ steps.extracted3.outputs.branch }}
