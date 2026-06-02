@@ -4,8 +4,8 @@
 name: Docs
 
 env:
-  USE_LOCKFILE: ${{ secrets.USE_LOCKFILE }}
-  ENABLE_DOCS: ${{ secrets.ENABLE_DOCS }}
+  USE_LOCKFILE: ${{ vars.USE_LOCKFILE }}
+  ENABLE_DOCS: ${{ vars.ENABLE_DOCS }}
 
 on:
   push:

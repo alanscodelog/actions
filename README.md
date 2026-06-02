@@ -54,6 +54,24 @@ Publishes to npm via semantic-release with OIDC authentication, or runs a dry ru
 | `release_script`   | No       | `"pnpm semantic-release"`            | Command for real release                     |
 | `dry_run_script`   | No       | `"pnpm semantic-release --dry-run"`  | Command for dry run                          |
 
+## Repository Variables and Secrets
+
+Set these in your repo's **Settings > Variables and secrets > Actions**:
+
+### Variables (non-sensitive config)
+
+| Variable         | Description                                        |
+|------------------|----------------------------------------------------|
+| `USE_LOCKFILE`   | `"true"` to use `--frozen-lockfile`, else omit     |
+| `ENABLE_DOCS`    | `"true"` to enable docs deployment                 |
+| `ENABLE_RELEASE` | `"true"` to enable npm publishing                  |
+
+### Secrets (sensitive)
+
+| Secret           | Description                        |
+|------------------|------------------------------------|
+| `GITHUB_TOKEN`   | Auto-provided by GitHub Actions    |
+
 ## Usage
 
 Reference from a workflow in the same monorepo:
@@ -62,7 +80,7 @@ Reference from a workflow in the same monorepo:
 - name: Setup
   uses: ../../@alanscodelog/actions/.github/actions/setup-node-pnpm
   with:
-    USE_LOCKFILE: ${{ secrets.USE_LOCKFILE }}
+    USE_LOCKFILE: ${{ vars.USE_LOCKFILE }}
     INSTALL_PLAYWRIGHT: true
 ```
 
@@ -72,5 +90,5 @@ Or from a separate repo (once published):
 - name: Setup
   uses: alanscodelog/actions/.github/actions/setup-node-pnpm@main
   with:
-    USE_LOCKFILE: ${{ secrets.USE_LOCKFILE }}
+    USE_LOCKFILE: ${{ vars.USE_LOCKFILE }}
 ```
