@@ -36,7 +36,9 @@ runs:
       if: "inputs.INSTALL_PLAYWRIGHT == 'true'"
       id: playwright-version
       shell: bash
-      run: echo "version=$(node -p \"require('playwright-core/package.json').version\")" >> "$GITHUB_OUTPUT"
+      run: |
+        version=$(node -e "console.log(require('playwright-core/package.json').version)")
+        echo "version=$version" >> "$GITHUB_OUTPUT"
 
     - name: Cache Playwright browsers
       if: "inputs.INSTALL_PLAYWRIGHT == 'true'"
