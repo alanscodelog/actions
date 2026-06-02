@@ -1,0 +1,36 @@
+name: Build, Lint, Test
+description: Builds, lints, and tests the project with optional coverage reporting.
+
+inputs:
+  build_script:
+    description: 'Command to run for building.'
+    required: false
+    default: "pnpm build"
+  lint_script:
+    description: 'Command to run for linting.'
+    required: false
+    default: "pnpm lint"
+  test_script:
+    description: 'Command to run for testing.'
+    required: false
+    default: "pnpm test"
+  report_coverage:
+    description: 'Set to "false" to skip coverage report posting on PRs.'
+    required: false
+    default: "true"
+
+runs:
+  using: "composite"
+  steps:
+    - run: ${{ inputs.build_script }}
+      shell: bash
+
+    - run: ${{ inputs.lint_script }}
+      shell: bash
+
+    - run: ${{ inputs.test_script }}
+      shell: bash
+
+    - name: Coverage
+      if: ${{ github.event_name == 'pull_request' && inputs.report_coverage == 'true' }}
+      uses: romeovs/lcov-reporter-action@v0.3.1

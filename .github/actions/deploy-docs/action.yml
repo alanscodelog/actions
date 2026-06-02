@@ -1,0 +1,56 @@
+name: Build and Deploy Docs
+description: Generates documentation and deploys to GitHub Pages.
+
+inputs:
+  doc_script:
+    description: 'Command to generate docs.'
+    required: false
+    default: "pnpm doc"
+  build_dir:
+    description: 'Directory containing built docs relative to repo root.'
+    required: false
+    default: "docs"
+  target_branch:
+    description: 'Branch to deploy docs to.'
+    required: false
+    default: "gh-pages"
+  build_playground:
+    description: 'Set to "true" to build and copy a playground demo.'
+    required: false
+    default: "false"
+  build_demo:
+    description: 'Set to "true" to install deps and copy a demo directory.'
+    required: false
+    default: "false"
+
+runs:
+  using: "composite"
+  steps:
+    - run: ${{ inputs.doc_script }}
+      shell: bash
+
+    - name: Build and Copy Playground if Enabled
+      if: "inputs.build_playground == 'true'"
+      shell: bash
+      run: |
+        if [ -d "playground" ]; then
+          cp -r playground/.output/public docs/demo
+        fi
+
+    - name: Build and Copy Demo if Enabled
+      if: "inputs.build_demo == 'true'"
+      shell: bash
+      run: |
+        if [ -d "demo" ]; then
+          pushd demo && pnpm i --frozen-lockfile && popd
+          cp -r demo/dist docs/demo
+        fi
+
+    - name: Documentation
+      uses: crazy-max/ghaction-github-pages@v4
+      with:
+        jekyll: false
+        target_branch: ${{ inputs.target_branch }}
+        build_dir: ${{ inputs.build_dir }}
+      env:
+        GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}

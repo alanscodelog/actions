@@ -1,0 +1,48 @@
+# Example release workflow — copy to your repo's .github/workflows/release.yml
+# and adjust as needed.
+
+name: Release
+
+env:
+  USE_LOCKFILE: ${{ secrets.USE_LOCKFILE }}
+  ENABLE_RELEASE: ${{ secrets.ENABLE_RELEASE }}
+
+on:
+  push:
+    branches: [ master, alpha, beta, build ]
+  repository_dispatch:
+    types: [ release ]
+
+permissions:
+  id-token: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ["lts/*"]
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup
+        uses: alanscodelog/actions/.github/actions/setup-node-pnpm@main
+        with:
+          USE_LOCKFILE: ${{ env.USE_LOCKFILE }}
+
+      - name: Build
+        uses: alanscodelog/actions/.github/actions/build-lint-test@main
+
+      - name: Release
+        uses: alanscodelog/actions/.github/actions/npm-release@main
+        with:
+          ENABLE_RELEASE: ${{ env.ENABLE_RELEASE }}
+          release_script: "pnpm semantic-release"
+          dry_run_script: "pnpm semantic-release --dry-run"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
