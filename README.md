@@ -114,7 +114,6 @@ permissions:
 
 jobs:
   release:
-    if: "vars.ENABLE_RELEASE == 'true'"
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -138,6 +137,8 @@ jobs:
 
       - name: Release
         uses: alanscodelog/actions/.github/actions/release@main
+        with:
+          ENABLE_RELEASE: ${{ vars.ENABLE_RELEASE == 'true' && github.ref != 'refs/heads/build' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
