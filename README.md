@@ -1,6 +1,6 @@
 # actions
 
-Shared composite actions for my repos.
+Shared composite actions for my package repos.
 
 ## Actions
 
@@ -59,22 +59,99 @@ Set these in **Settings > Variables and secrets > Actions > Variables**:
 | `ENABLE_DOCS`    | `"true"` to enable docs deployment                 |
 | `ENABLE_RELEASE` | `"true"` to enable npm publishing                  |
 
-## Usage
+## Example Workflows
 
-From a separate repo:
+### Docs (`.github/workflows/docs.yml`)
 
 ```yaml
-- name: Setup
-  uses: alanscodelog/actions/.github/actions/setup@main
-  with:
-    USE_LOCKFILE: ${{ vars.USE_LOCKFILE }}
+name: Docs
+
+env:
+  USE_LOCKFILE: ${{ vars.USE_LOCKFILE }}
+  ENABLE_DOCS: ${{ vars.ENABLE_DOCS }}
+
+on:
+  push:
+    branches: [ master ]
+  repository_dispatch:
+    types: [ docs ]
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ["lts/*"]
+    steps:
+      - uses: actions/checkout@v6
+        if: "env.ENABLE_DOCS == 'true'"
+
+      - name: Setup
+        uses: alanscodelog/actions/.github/actions/setup@main
+        if: "env.ENABLE_DOCS == 'true'"
+        with:
+          USE_LOCKFILE: ${{ env.USE_LOCKFILE }}
+          # INSTALL_PLAYWRIGHT: true
+
+      - name: Build
+        uses: alanscodelog/actions/.github/actions/build@main
+        if: "env.ENABLE_DOCS == 'true'"
+
+      - name: Deploy Docs
+        uses: alanscodelog/actions/.github/actions/docs@main
+        if: "env.ENABLE_DOCS == 'true'"
+        with:
+          build_playground: "false"
+          build_demo: "false"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-From the same monorepo (testing locally):
+### Release (`.github/workflows/release.yml`)
 
 ```yaml
-- name: Setup
-  uses: ../../@alanscodelog/actions/.github/actions/setup
-  with:
-    USE_LOCKFILE: ${{ vars.USE_LOCKFILE }}
+name: Release
+
+env:
+  USE_LOCKFILE: ${{ vars.USE_LOCKFILE }}
+  ENABLE_RELEASE: ${{ vars.ENABLE_RELEASE }}
+
+on:
+  push:
+    branches: [ master, alpha, beta, build ]
+  repository_dispatch:
+    types: [ release ]
+
+permissions:
+  id-token: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ["lts/*"]
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup
+        uses: alanscodelog/actions/.github/actions/setup@main
+        with:
+          USE_LOCKFILE: ${{ env.USE_LOCKFILE }}
+          # INSTALL_PLAYWRIGHT: true
+
+      - name: Build
+        uses: alanscodelog/actions/.github/actions/build@main
+
+      - name: Release
+        uses: alanscodelog/actions/.github/actions/release@main
+        with:
+          ENABLE_RELEASE: ${{ env.ENABLE_RELEASE }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
