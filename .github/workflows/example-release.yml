@@ -1,5 +1,4 @@
-# Example release workflow — copy to your repo's .github/workflows/release.yml
-# and adjust as needed.
+# Copy to your repo's .github/workflows/release.yml
 
 name: Release
 
@@ -44,7 +43,5 @@ jobs:
         uses: alanscodelog/actions/.github/actions/npm-release@main
         with:
           ENABLE_RELEASE: ${{ env.ENABLE_RELEASE }}
-          release_script: "pnpm semantic-release"
-          dry_run_script: "pnpm semantic-release --dry-run"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

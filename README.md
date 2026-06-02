@@ -1,12 +1,12 @@
-# @alanscodelog/actions
+# actions
 
-Reusable GitHub Actions composite actions for the Alan's Code Log monorepo packages.
+Shared composite actions for my package repos.
 
 ## Actions
 
 ### setup-node-pnpm
 
-Installs Node.js, pnpm, and project dependencies.
+Sets up Node.js, pnpm, and installs dependencies. Caches the pnpm store when `USE_LOCKFILE` is `"true"`.
 
 **Inputs:**
 
@@ -17,7 +17,7 @@ Installs Node.js, pnpm, and project dependencies.
 
 ### build-lint-test
 
-Runs build, lint, and test steps with optional coverage reporting.
+Runs `pnpm build`, `pnpm lint`, `pnpm test` with optional coverage reporting on PRs.
 
 **Inputs:**
 
@@ -30,35 +30,28 @@ Runs build, lint, and test steps with optional coverage reporting.
 
 ### deploy-docs
 
-Generates documentation and deploys to GitHub Pages.
+Runs `pnpm doc` and deploys to `gh-pages` via GitHub Pages.
 
 **Inputs:**
 
-| Input              | Required | Default           | Description                                  |
-|--------------------|----------|--------------------|----------------------------------------------|
-| `doc_script`       | No       | `"pnpm doc"`       | Command to generate docs                     |
-| `build_dir`        | No       | `"docs"`           | Directory containing built docs              |
-| `target_branch`    | No       | `"gh-pages"`       | Branch to deploy to                          |
-| `build_playground` | No       | `"false"`          | `"true"` to copy playground output as demo   |
-| `build_demo`       | No       | `"false"`          | `"true"` to install and copy demo directory  |
+| Input              | Required | Default   | Description                                            |
+|--------------------|----------|-----------|--------------------------------------------------------|
+| `build_playground` | No       | `"false"` | `"true"` to copy the Nuxt playground output as a demo  |
+| `build_demo`       | No       | `"false"` | `"true"` to install deps and copy a `demo/` directory  |
 
 ### npm-release
 
-Publishes to npm via semantic-release with OIDC authentication, or runs a dry run.
+Publishes to npm via `pnpm semantic-release` with OIDC, or runs a dry run.
 
 **Inputs:**
 
-| Input              | Required | Default                              | Description                                  |
-|--------------------|----------|---------------------------------------|----------------------------------------------|
-| `ENABLE_RELEASE`   | Yes      | —                                     | `"true"` to publish; otherwise dry run       |
-| `release_script`   | No       | `"pnpm semantic-release"`            | Command for real release                     |
-| `dry_run_script`   | No       | `"pnpm semantic-release --dry-run"`  | Command for dry run                          |
+| Input              | Required | Default | Description                                      |
+|--------------------|----------|---------|--------------------------------------------------|
+| `ENABLE_RELEASE`   | Yes      | —       | `"true"` to publish; otherwise dry run           |
 
-## Repository Variables and Secrets
+## Repo Variables
 
-Set these in your repo's **Settings > Variables and secrets > Actions**:
-
-### Variables (non-sensitive config)
+Set these in **Settings > Variables and secrets > Actions > Variables**:
 
 | Variable         | Description                                        |
 |------------------|----------------------------------------------------|
@@ -66,29 +59,22 @@ Set these in your repo's **Settings > Variables and secrets > Actions**:
 | `ENABLE_DOCS`    | `"true"` to enable docs deployment                 |
 | `ENABLE_RELEASE` | `"true"` to enable npm publishing                  |
 
-### Secrets (sensitive)
-
-| Secret           | Description                        |
-|------------------|------------------------------------|
-| `GITHUB_TOKEN`   | Auto-provided by GitHub Actions    |
-
 ## Usage
 
-Reference from a workflow in the same monorepo:
-
-```yaml
-- name: Setup
-  uses: ../../@alanscodelog/actions/.github/actions/setup-node-pnpm
-  with:
-    USE_LOCKFILE: ${{ vars.USE_LOCKFILE }}
-    INSTALL_PLAYWRIGHT: true
-```
-
-Or from a separate repo (once published):
+From a separate repo:
 
 ```yaml
 - name: Setup
   uses: alanscodelog/actions/.github/actions/setup-node-pnpm@main
+  with:
+    USE_LOCKFILE: ${{ vars.USE_LOCKFILE }}
+```
+
+From the same monorepo (testing locally):
+
+```yaml
+- name: Setup
+  uses: ../../@alanscodelog/actions/.github/actions/setup-node-pnpm
   with:
     USE_LOCKFILE: ${{ vars.USE_LOCKFILE }}
 ```

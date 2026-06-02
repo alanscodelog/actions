@@ -5,14 +5,6 @@ inputs:
   ENABLE_RELEASE:
     description: 'Set to "true" to publish; otherwise runs a dry run.'
     required: true
-  release_script:
-    description: 'Command to run for releasing.'
-    required: false
-    default: "pnpm semantic-release"
-  dry_run_script:
-    description: 'Command to run for a dry run.'
-    required: false
-    default: "pnpm semantic-release --dry-run"
 
 runs:
   using: "composite"
@@ -21,14 +13,14 @@ runs:
       if: "inputs.ENABLE_RELEASE == 'true' && ! contains('refs/heads/build ', github.ref)"
       env:
         GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
-      run: ${{ inputs.release_script }}
+      run: pnpm semantic-release
       shell: bash
 
     - name: Release Dry Run
       if: "inputs.ENABLE_RELEASE != 'true' || contains('refs/heads/build ', github.ref)"
       env:
         GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
-      run: ${{ inputs.dry_run_script }}
+      run: pnpm semantic-release --dry-run
       shell: bash
 
     - name: Fail if no release

@@ -1,5 +1,4 @@
-# Example docs workflow — copy to your repo's .github/workflows/docs.yml
-# and adjust as needed.
+# Copy to your repo's .github/workflows/docs.yml
 
 name: Docs
 
@@ -39,10 +38,7 @@ jobs:
         uses: alanscodelog/actions/.github/actions/deploy-docs@main
         if: "env.ENABLE_DOCS == 'true'"
         with:
-          doc_script: "pnpm doc"
-          build_dir: "docs"
-          target_branch: "gh-pages"
-          # Set to "true" if your package has a playground to copy as demo
+          # Set to "true" if your package has a Nuxt playground to copy as demo
           build_playground: "false"
           # Set to "true" if your package has a demo/ directory to build
           build_demo: "false"
