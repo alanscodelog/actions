@@ -109,16 +109,16 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Setup
-        uses: alanscodelog/actions/.github/actions/setup@main
+        uses: alanscodelog/actions/.github/actions/setup@master
         with:
           USE_LOCKFILE: ${{ vars.USE_LOCKFILE }}
           # INSTALL_PLAYWRIGHT: true
 
       - name: Build
-        uses: alanscodelog/actions/.github/actions/build@main
+        uses: alanscodelog/actions/.github/actions/build@master
 
       - name: Docs
-        uses: alanscodelog/actions/.github/actions/docs@main
+        uses: alanscodelog/actions/.github/actions/docs@master
         with:
           build_playground: "false"
           build_demo: "false"
@@ -155,16 +155,16 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Setup
-        uses: alanscodelog/actions/.github/actions/setup@main
+        uses: alanscodelog/actions/.github/actions/setup@master
         with:
           USE_LOCKFILE: ${{ vars.USE_LOCKFILE }}
           # INSTALL_PLAYWRIGHT: true
 
       - name: Build
-        uses: alanscodelog/actions/.github/actions/build@main
+        uses: alanscodelog/actions/.github/actions/build@master
 
       - name: Release
-        uses: alanscodelog/actions/.github/actions/release@main
+        uses: alanscodelog/actions/.github/actions/release@master
         with:
           ENABLE_RELEASE: ${{ vars.ENABLE_RELEASE == 'true' && github.ref != 'refs/heads/build' }}
         env:
