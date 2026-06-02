@@ -30,17 +30,17 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Setup
-        uses: alanscodelog/actions/.github/actions/setup-node-pnpm@main
+        uses: alanscodelog/actions/.github/actions/setup@main
         with:
           USE_LOCKFILE: ${{ env.USE_LOCKFILE }}
           # Uncomment if your package uses Playwright:
           # INSTALL_PLAYWRIGHT: true
 
       - name: Build
-        uses: alanscodelog/actions/.github/actions/build-lint-test@main
+        uses: alanscodelog/actions/.github/actions/build@main
 
       - name: Release
-        uses: alanscodelog/actions/.github/actions/npm-release@main
+        uses: alanscodelog/actions/.github/actions/release@main
         with:
           ENABLE_RELEASE: ${{ env.ENABLE_RELEASE }}
         env:

@@ -4,7 +4,7 @@ Shared composite actions for my package repos.
 
 ## Actions
 
-### setup-node-pnpm
+### setup
 
 Sets up Node.js, pnpm, and installs dependencies. Caches the pnpm store when `USE_LOCKFILE` is `"true"`.
 
@@ -15,7 +15,7 @@ Sets up Node.js, pnpm, and installs dependencies. Caches the pnpm store when `US
 | `USE_LOCKFILE`     | Yes      | —         | `"true"` for `--frozen-lockfile`, otherwise `--no-lockfile`    |
 | `INSTALL_PLAYWRIGHT` | No     | `"false"` | `"true"` to install Playwright browsers with caching           |
 
-### build-lint-test
+### build
 
 Runs `pnpm build`, `pnpm lint`, `pnpm test` with optional coverage reporting on PRs.
 
@@ -28,7 +28,7 @@ Runs `pnpm build`, `pnpm lint`, `pnpm test` with optional coverage reporting on 
 | `test_script`      | No       | `"pnpm test"`      | Command to run for testing                   |
 | `report_coverage`  | No       | `"true"`           | `"false"` to skip coverage report on PRs     |
 
-### deploy-docs
+### docs
 
 Runs `pnpm doc` and deploys to `gh-pages` via GitHub Pages.
 
@@ -39,7 +39,7 @@ Runs `pnpm doc` and deploys to `gh-pages` via GitHub Pages.
 | `build_playground` | No       | `"false"` | `"true"` to copy the Nuxt playground output as a demo  |
 | `build_demo`       | No       | `"false"` | `"true"` to install deps and copy a `demo/` directory  |
 
-### npm-release
+### release
 
 Publishes to npm via `pnpm semantic-release` with OIDC, or runs a dry run.
 
@@ -65,7 +65,7 @@ From a separate repo:
 
 ```yaml
 - name: Setup
-  uses: alanscodelog/actions/.github/actions/setup-node-pnpm@main
+  uses: alanscodelog/actions/.github/actions/setup@main
   with:
     USE_LOCKFILE: ${{ vars.USE_LOCKFILE }}
 ```
@@ -74,7 +74,7 @@ From the same monorepo (testing locally):
 
 ```yaml
 - name: Setup
-  uses: ../../@alanscodelog/actions/.github/actions/setup-node-pnpm
+  uses: ../../@alanscodelog/actions/.github/actions/setup
   with:
     USE_LOCKFILE: ${{ vars.USE_LOCKFILE }}
 ```
