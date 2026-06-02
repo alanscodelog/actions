@@ -1,5 +1,3 @@
-# Copy to your repo's .github/workflows/docs.yml
-
 name: Docs
 
 env:
@@ -27,7 +25,6 @@ jobs:
         if: "env.ENABLE_DOCS == 'true'"
         with:
           USE_LOCKFILE: ${{ env.USE_LOCKFILE }}
-          # Uncomment if your package uses Playwright:
           # INSTALL_PLAYWRIGHT: true
 
       - name: Build
@@ -38,9 +35,7 @@ jobs:
         uses: alanscodelog/actions/.github/actions/docs@main
         if: "env.ENABLE_DOCS == 'true'"
         with:
-          # Set to "true" if your package has a Nuxt playground to copy as demo
           build_playground: "false"
-          # Set to "true" if your package has a demo/ directory to build
           build_demo: "false"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

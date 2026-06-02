@@ -1,5 +1,3 @@
-# Copy to your repo's .github/workflows/release.yml
-
 name: Release
 
 env:
@@ -33,7 +31,6 @@ jobs:
         uses: alanscodelog/actions/.github/actions/setup@main
         with:
           USE_LOCKFILE: ${{ env.USE_LOCKFILE }}
-          # Uncomment if your package uses Playwright:
           # INSTALL_PLAYWRIGHT: true
 
       - name: Build

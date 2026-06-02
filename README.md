@@ -1,6 +1,6 @@
 # actions
 
-Shared composite actions for my package repos.
+Shared composite actions for my repos.
 
 ## Actions
 
