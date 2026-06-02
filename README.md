@@ -47,7 +47,7 @@ Publishes to npm via `pnpm semantic-release` with OIDC, or runs a dry run.
 
 | Input              | Required | Default | Description                                      |
 |--------------------|----------|---------|--------------------------------------------------|
-| `ENABLE_RELEASE`   | Yes      | —       | `"true"` to publish; otherwise dry run           |
+| `ENABLE_RELEASE`   | No       | `"true"`  | `"false"` to run dry run instead                   |
 
 ## Repo Variables
 
@@ -74,28 +74,25 @@ on:
 
 jobs:
   docs:
+    if: "vars.ENABLE_DOCS == 'true'"
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: ["lts/*"]
     steps:
       - uses: actions/checkout@v6
-        if: "vars.ENABLE_DOCS == 'true'"
 
       - name: Setup
         uses: alanscodelog/actions/.github/actions/setup@main
-        if: "vars.ENABLE_DOCS == 'true'"
         with:
           USE_LOCKFILE: ${{ vars.USE_LOCKFILE }}
           # INSTALL_PLAYWRIGHT: true
 
       - name: Build
         uses: alanscodelog/actions/.github/actions/build@main
-        if: "vars.ENABLE_DOCS == 'true'"
 
-      - name: Deploy Docs
+      - name: Docs
         uses: alanscodelog/actions/.github/actions/docs@main
-        if: "vars.ENABLE_DOCS == 'true'"
         with:
           build_playground: "false"
           build_demo: "false"
@@ -119,6 +116,7 @@ permissions:
 
 jobs:
   release:
+    if: "vars.ENABLE_RELEASE == 'true'"
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -142,8 +140,6 @@ jobs:
 
       - name: Release
         uses: alanscodelog/actions/.github/actions/release@main
-        with:
-          ENABLE_RELEASE: ${{ vars.ENABLE_RELEASE }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```

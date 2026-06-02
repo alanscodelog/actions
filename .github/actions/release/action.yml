@@ -3,8 +3,9 @@ description: Publishes to npm via semantic-release with OIDC, or runs a dry run.
 
 inputs:
   ENABLE_RELEASE:
-    description: 'Set to "true" to publish; otherwise runs a dry run.'
-    required: true
+    description: 'Set to "true" to publish; otherwise runs a dry run. Defaults to "true" (gating is handled at the job level).'
+    required: false
+    default: "true"
 
 runs:
   using: "composite"
