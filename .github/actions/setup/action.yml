@@ -3,8 +3,9 @@ description: Installs Node.js, pnpm, and project dependencies with optional cach
 
 inputs:
   USE_LOCKFILE:
-    description: 'Set to "true" to use --frozen-lockfile, otherwise installs without lockfile.'
+    description: 'Set to "false" to not use the lockfile (--no-lockfile).'
     required: true
+    default: 'true'
   INSTALL_PLAYWRIGHT:
     description: 'Set to "true" to install Playwright browsers with caching.'
     required: false

@@ -1,10 +1,8 @@
-# actions
+# Actions
 
 Shared composite actions for my package repos.
 
-## Actions
-
-### setup
+## setup
 
 Sets up Node.js, pnpm, and installs dependencies. Caches the pnpm store when `USE_LOCKFILE` is `"true"`.
 
@@ -15,7 +13,7 @@ Sets up Node.js, pnpm, and installs dependencies. Caches the pnpm store when `US
 | `USE_LOCKFILE`     | Yes      | —         | `"true"` for `--frozen-lockfile`, otherwise `--no-lockfile`    |
 | `INSTALL_PLAYWRIGHT` | No     | `"false"` | `"true"` to install Playwright browsers with caching           |
 
-### build
+## build
 
 Runs `pnpm build`, `pnpm lint`, `pnpm test` with optional coverage reporting on PRs.
 
@@ -28,7 +26,7 @@ Runs `pnpm build`, `pnpm lint`, `pnpm test` with optional coverage reporting on 
 | `test_script`      | No       | `"pnpm test"`      | Command to run for testing                   |
 | `report_coverage`  | No       | `"true"`           | `"false"` to skip coverage report on PRs     |
 
-### docs
+## docs
 
 Runs `pnpm doc` and deploys to `gh-pages` via GitHub Pages.
 
@@ -39,7 +37,7 @@ Runs `pnpm doc` and deploys to `gh-pages` via GitHub Pages.
 | `build_playground` | No       | `"false"` | `"true"` to copy the Nuxt playground output as a demo  |
 | `build_demo`       | No       | `"false"` | `"true"` to install deps and copy a `demo/` directory  |
 
-### release
+## release
 
 Publishes to npm via `pnpm semantic-release` with OIDC, or runs a dry run.
 
@@ -49,7 +47,7 @@ Publishes to npm via `pnpm semantic-release` with OIDC, or runs a dry run.
 |--------------------|----------|---------|--------------------------------------------------|
 | `ENABLE_RELEASE`   | No       | `"true"`  | `"false"` to run dry run instead                   |
 
-## Repo Variables
+# Repo Variables
 
 Set these in **Settings > Variables and secrets > Actions > Variables**:
 
@@ -59,7 +57,7 @@ Set these in **Settings > Variables and secrets > Actions > Variables**:
 | `ENABLE_DOCS`    | `"true"` to enable docs deployment                 |
 | `ENABLE_RELEASE` | `"true"` to enable npm publishing                  |
 
-## Example Workflows
+# Example Workflows
 
 ### Docs (`.github/workflows/docs.yml`)
 
@@ -100,7 +98,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-### Release (`.github/workflows/release.yml`)
+## Release (`.github/workflows/release.yml`)
 
 ```yaml
 name: Release
