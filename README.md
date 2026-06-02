@@ -66,10 +66,6 @@ Set these in **Settings > Variables and secrets > Actions > Variables**:
 ```yaml
 name: Docs
 
-env:
-  USE_LOCKFILE: ${{ vars.USE_LOCKFILE }}
-  ENABLE_DOCS: ${{ vars.ENABLE_DOCS }}
-
 on:
   push:
     branches: [ master ]
@@ -84,22 +80,22 @@ jobs:
         node-version: ["lts/*"]
     steps:
       - uses: actions/checkout@v6
-        if: "env.ENABLE_DOCS == 'true'"
+        if: "vars.ENABLE_DOCS == 'true'"
 
       - name: Setup
         uses: alanscodelog/actions/.github/actions/setup@main
-        if: "env.ENABLE_DOCS == 'true'"
+        if: "vars.ENABLE_DOCS == 'true'"
         with:
-          USE_LOCKFILE: ${{ env.USE_LOCKFILE }}
+          USE_LOCKFILE: ${{ vars.USE_LOCKFILE }}
           # INSTALL_PLAYWRIGHT: true
 
       - name: Build
         uses: alanscodelog/actions/.github/actions/build@main
-        if: "env.ENABLE_DOCS == 'true'"
+        if: "vars.ENABLE_DOCS == 'true'"
 
       - name: Deploy Docs
         uses: alanscodelog/actions/.github/actions/docs@main
-        if: "env.ENABLE_DOCS == 'true'"
+        if: "vars.ENABLE_DOCS == 'true'"
         with:
           build_playground: "false"
           build_demo: "false"
@@ -111,10 +107,6 @@ jobs:
 
 ```yaml
 name: Release
-
-env:
-  USE_LOCKFILE: ${{ vars.USE_LOCKFILE }}
-  ENABLE_RELEASE: ${{ vars.ENABLE_RELEASE }}
 
 on:
   push:
@@ -142,7 +134,7 @@ jobs:
       - name: Setup
         uses: alanscodelog/actions/.github/actions/setup@main
         with:
-          USE_LOCKFILE: ${{ env.USE_LOCKFILE }}
+          USE_LOCKFILE: ${{ vars.USE_LOCKFILE }}
           # INSTALL_PLAYWRIGHT: true
 
       - name: Build
@@ -151,7 +143,7 @@ jobs:
       - name: Release
         uses: alanscodelog/actions/.github/actions/release@main
         with:
-          ENABLE_RELEASE: ${{ env.ENABLE_RELEASE }}
+          ENABLE_RELEASE: ${{ vars.ENABLE_RELEASE }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
