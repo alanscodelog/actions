@@ -6,6 +6,7 @@ Replace local `composite-setup` and `composite-build` actions + inline release/d
 
 - Delete `.github/actions/composite-setup/` and `.github/actions/composite-build/`
 - Replace `docs.yml` and `release.yml` with the standardized workflows
+- Update README badges to Nuxt-style alias format (Docs, Release, npm, License, Nuxt if applicable)
 - Migrate `secrets.USE_LOCKFILE` / `secrets.ENABLE_DOCS` / `secrets.ENABLE_RELEASE` to repo **variables** (not secrets)
 - Remove `NPM_TOKEN` secret usage (OIDC handles publishing)
 

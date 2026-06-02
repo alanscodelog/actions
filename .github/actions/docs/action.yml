@@ -30,7 +30,7 @@ runs:
       shell: bash
       run: |
         if [ -d "demo" ]; then
-          pushd demo && pnpm i --frozen-lockfile && popd
+          pushd demo && pnpm i --frozen-lockfile && pnpm build && popd
           cp -r demo/dist docs/demo
         fi
 
