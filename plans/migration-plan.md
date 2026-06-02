@@ -23,7 +23,7 @@ Replace local `composite-setup` and `composite-build` actions + inline release/d
 - **@witchcraft/nuxt-android** — `/home/alan/code/nuxtapps/packages/@witchcraft/nuxt-android`
 - **@witchcraft/nuxt-auth** — `/home/alan/code/nuxtapps/packages/@witchcraft/nuxt-auth`
 - **@witchcraft/nuxt-electron** — `/home/alan/code/nuxtapps/packages/@witchcraft/nuxt-electron`
-- **@witchcraft/nuxt-logger** — `/home/alan/code/nuxtapps/packages/@witchcraft/nuxt-logger`
+- [x] **@witchcraft/nuxt-logger** — `/home/alan/code/nuxtapps/packages/@witchcraft/nuxt-logger` ✅ `805f131`
 - **@witchcraft/nuxt-utils** — `/home/alan/code/nuxtapps/packages/@witchcraft/nuxt-utils`
 
 ### Custom docs
