@@ -1,40 +1,105 @@
 name: Build and Deploy Docs
-description: Generates documentation and deploys to GitHub Pages.
+description: Generates documentation (Typedoc and/or Nuxt docs-site) and deploys to GitHub Pages.
 
 inputs:
-  build_playground:
-    description: 'Set to "true" to copy the Nuxt playground output as a demo.'
+  use_playground:
+    description: 'Set to "true" to move the Nuxt playground output to docs/demo.'
     required: false
     default: "false"
   build_demo:
-    description: 'Set to "true" to install deps and copy a demo/ directory.'
+    description: 'Set to "true" to run pnpm demo:build and move the demo/dist output to docs/demo.'
+    required: false
+    default: "false"
+  use_nuxt_docs:
+    description: 'Set to "true" to move nuxt output to docs/.'
+    required: false
+    default: "false"
+  use_typedoc:
+    description: 'Set to "true" to move typedoc output to docs/ if use_nuxt_docs is not enable, otherwise docs/types/.'
+    required: false
+    default: "false"
+  use_storybook:
+    description: 'Set to "true" to move storybook output to docs/storybook.'
     required: false
     default: "false"
 
 runs:
   using: "composite"
   steps:
-    - run: pnpm doc
+    - name: Build Typedoc
       shell: bash
+      # this should build docs to their respective output directories
+      # playgrounds should have been built by the build composite action
+      run: pnpm doc
 
-    - name: Copy Playground Demo
-      if: "inputs.build_playground == 'true'"
+    - name: Move Nuxt Docs to /docs as Main Docs
+      if: "inputs.use_nuxt_docs == 'true'"
       shell: bash
       run: |
-        if [ -d "playground" ]; then
-          cp -r playground/.output/public docs/demo
+        if [ -d "docs-site/.output" ]; then
+          mv docs-site/.output docs
+        else
+          echo "No Nuxt docs-site output found."
+          exit 1
         fi
 
-    - name: Copy Demo
+    - name: Move Typedoc to /docs as Main Docs
+      if: "inputs.use_typedoc == 'true' && inputs.use_nuxt_docs != 'true'"
+      shell: bash
+      run: |
+        if [ -d "docs-types" ]; then
+          mv docs-types docs
+        else
+          echo "No Typedoc docs-types output found."
+          exit 1
+        fi
+
+    - name: Move Typedoc to /docs/types
+      if: "inputs.use_typedoc == 'true' && inputs.use_nuxt_docs == 'true'"
+      shell: bash
+      run: |
+        if [ -d "docs-types" ]; then
+          mv docs-types docs/types
+        else
+          echo "No Typedoc output found."
+          exit 1
+        fi
+
+    - name: Move Playground Demo
+      if: "inputs.use_playground == 'true'"
+      shell: bash
+      run: |
+        if [ -d "playground/.output/public" ]; then
+          mv playground/.output/public docs/demo
+        else
+          echo "No Nuxt playground output found."
+          exit 1
+        fi
+
+    - name: Move Storybook to /docs/storybook
+      if: "inputs.use_storybook == 'true'"
+      shell: bash
+      run: |
+        if [ -d "docs-storybook" ]; then
+          mv docs-storybook docs/storybook
+        else
+          echo "No Storybook output found."
+          exit 1
+        fi
+
+    - name: Build and Move Demo
       if: "inputs.build_demo == 'true'"
       shell: bash
       run: |
         if [ -d "demo" ]; then
-          pushd demo && pnpm i --frozen-lockfile && pnpm build && popd
-          cp -r demo/dist docs/demo
+          pnpm demo:build
+          mv demo/dist docs/demo
+        else
+          echo "No demo output found."
+          exit 1
         fi
 
-    - name: Documentation
+    - name: Publishing /docs to GitHub Pages
       uses: crazy-max/ghaction-github-pages@v4
       with:
         jekyll: false

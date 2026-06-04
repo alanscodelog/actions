@@ -56,14 +56,16 @@ Runs `pnpm build`, `pnpm lint`, `pnpm test` with optional coverage reporting on 
 
 ## docs
 
-Runs `pnpm doc` and deploys to `gh-pages` via GitHub Pages.
+Runs `pnpm doc` (Typedoc) and/or builds a Nuxt `docs-site/` app, then deploys to `gh-pages` via GitHub Pages. Typedoc outputs to `docs-types/` which is moved to `/docs` (Typedoc-only) or `/docs/types` (when Nuxt docs are also enabled). Nuxt docs-site output goes to `/docs`.
 
 **Inputs:**
 
-| Input              | Required | Default   | Description                                            |
-|--------------------|----------|-----------|--------------------------------------------------------|
-| `build_playground` | No       | `"false"` | `"true"` to copy the Nuxt playground output as a demo  |
-| `build_demo`       | No       | `"false"` | `"true"` to install deps and copy a `demo/` directory  |
+| Input              | Required | Default   | Description                                                                |
+|--------------------|----------|-----------|----------------------------------------------------------------------------|
+| `use_playground`   | No       | `"false"` | `"true"` to move the Nuxt playground output to `docs/demo`                 |
+| `build_demo`       | No       | `"false"` | `"true"` to run `pnpm demo:build` and move `demo/dist` to `docs/demo`     |
+| `use_nuxt_docs`    | No       | `"false"` | `"true"` to move Nuxt docs-site output to `docs/`                          |
+| `use_typedoc`     | No       | `"false"` | `"true"` to move Typedoc output to `docs/` (or `docs/types` with Nuxt)    |
 
 ## release
 
@@ -120,8 +122,10 @@ jobs:
       - name: Docs
         uses: alanscodelog/actions/.github/actions/docs@master
         with:
-          build_playground: "false"
-          build_demo: "false"
+          use_playground: "true"
+          build_demo: "true"
+          use_nuxt_docs: "true"
+          use_typedoc: "true"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
