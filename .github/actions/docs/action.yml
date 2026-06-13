@@ -37,7 +37,7 @@ runs:
       shell: bash
       run: |
         if [ -d "docs-site/.output" ]; then
-          mv docs-site/.output docs
+          mv docs-site/.output/public docs
         else
           echo "No Nuxt docs-site output found."
           exit 1
