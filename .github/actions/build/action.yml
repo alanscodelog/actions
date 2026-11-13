@@ -18,8 +18,14 @@ inputs:
     description: 'Command that starts a server the tests need. Skipped when empty.'
     required: false
     default: ""
+  # https://github.com/nuxt/nuxt/issues/29771
   server_health_url:
     description: 'Full URL polled until the server answers, e.g. http://localhost:3000/.'
+    required: false
+    default: ""
+  # https://github.com/nuxt/nuxt/issues/29771
+  server_ready_url:
+    description: 'Second URL polled after the health URL, e.g. the homepage, to confirm the front layer finished building.'
     required: false
     default: ""
   report_coverage:
@@ -43,7 +49,11 @@ runs:
 
     - name: Wait for server
       if: ${{ inputs.server_script != '' }}
-      run: curl --retry 60 --retry-delay 5 --retry-all-errors -sf ${{ inputs.server_health_url }} > /dev/null
+      run: |
+        curl --retry 60 --retry-delay 5 --retry-all-errors -sf ${{ inputs.server_health_url }} > /dev/null
+        if [ -n "${{ inputs.server_ready_url }}" ]; then
+          curl --retry 60 --retry-delay 5 --retry-all-errors -sf ${{ inputs.server_ready_url }} > /dev/null
+        fi
       shell: bash
 
     - run: ${{ inputs.test_script }}
