@@ -32,6 +32,7 @@ runs:
       if: "inputs.USE_LOCKFILE != 'true'"
       shell: bash
 
+    # @playwright/test and playwright-core need to both be pinned to the matching devenv input and they must be in the root package json of the repo
     - name: Get Playwright version
       if: "inputs.INSTALL_PLAYWRIGHT == 'true'"
       id: playwright-version
