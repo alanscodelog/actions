@@ -14,6 +14,14 @@ inputs:
     description: 'Command to run for testing.'
     required: false
     default: "pnpm test"
+  server_script:
+    description: 'Command that starts a server the tests need. Skipped when empty.'
+    required: false
+    default: ""
+  server_health_url:
+    description: 'Full URL polled until the server answers, e.g. http://localhost:3000/.'
+    required: false
+    default: ""
   report_coverage:
     description: 'Set to "false" to skip coverage report posting on PRs.'
     required: false
@@ -28,7 +36,29 @@ runs:
     - run: ${{ inputs.lint_script }}
       shell: bash
 
+    - name: Start server
+      if: ${{ inputs.server_script != '' }}
+      run: ${{ inputs.server_script }} > /tmp/server.log 2>&1 &
+      shell: bash
+
+    - name: Wait for server
+      if: ${{ inputs.server_script != '' }}
+      run: curl --retry 60 --retry-delay 5 --retry-all-errors -sf ${{ inputs.server_health_url }} > /dev/null
+      shell: bash
+
     - run: ${{ inputs.test_script }}
+      shell: bash
+
+    - name: Stop server
+      if: ${{ always() && inputs.server_script != '' }}
+      run: pkill -f "$TEST_SERVER_PATTERN" || true
+      shell: bash
+      env:
+        TEST_SERVER_PATTERN: ${{ inputs.server_script }}
+
+    - name: Dump server log
+      if: ${{ failure() && inputs.server_script != '' }}
+      run: tail -n 100 /tmp/server.log
       shell: bash
 
     - name: Coverage
