@@ -55,6 +55,7 @@ Runs `pnpm build`, `pnpm lint`, `pnpm test` with optional coverage reporting on 
 | `server_script`    | No       | `""`               | Command that starts a server the tests need |
 | `server_health_url` | No      | `""`               | URL polled until the server answers |
 | `server_ready_url` | No       | `""`               | Second URL polled after the health URL |
+| `set_self_signed_cert` | No | `"false"`          | `"true"` to generate a throwaway localhost cert before the server starts |
 | `report_coverage`  | No       | `"true"`           | `"false"` to skip coverage report on PRs     |
 
 The server_*_url options need 2 urls for nuxt. Its dev server answers pages with 200 while api routes still return 503 during boot. So point `server_health_url` at a db-reading route and `server_ready_url` at the homepage. Gate the db query to dev only so production probes do not hammer the database. For other servers, just one url will do.

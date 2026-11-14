@@ -28,6 +28,10 @@ inputs:
     description: 'Second URL polled after the health URL, e.g. the homepage, to confirm the front layer finished building.'
     required: false
     default: ""
+  set_self_signed_cert:
+    description: 'Set to "true" to generate a throwaway localhost cert before the server starts, exported as LOCALHOST_KEY_PEM and LOCALHOST_PEM.'
+    required: false
+    default: "false"
   report_coverage:
     description: 'Set to "false" to skip coverage report posting on PRs.'
     required: false
@@ -36,6 +40,15 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Generate self-signed cert
+      if: ${{ inputs.set_self_signed_cert == 'true' }}
+      run: |
+        printf '%s\n' '[req]' 'distinguished_name = dn' 'prompt = no' '[dn]' 'CN = localhost' '[v3_req]' 'subjectAltName = @alt_names' '[alt_names]' 'DNS.1 = localhost' 'IP.1 = 127.0.0.1' > /tmp/localhost-cert.conf
+        openssl req -x509 -newkey rsa:2048 -nodes -keyout /tmp/localhost-key.pem -out /tmp/localhost-cert.pem -days 2 -config /tmp/localhost-cert.conf -extensions v3_req
+        echo "LOCALHOST_KEY_PEM=/tmp/localhost-key.pem" >> "$GITHUB_ENV"
+        echo "LOCALHOST_PEM=/tmp/localhost-cert.pem" >> "$GITHUB_ENV"
+      shell: bash
+
     - run: ${{ inputs.build_script }}
       shell: bash
 
