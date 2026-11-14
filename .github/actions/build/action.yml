@@ -50,9 +50,9 @@ runs:
     - name: Wait for server
       if: ${{ inputs.server_script != '' }}
       run: |
-        curl --retry 60 --retry-delay 5 --retry-all-errors -sf ${{ inputs.server_health_url }} > /dev/null
+        curl --retry 60 --retry-delay 5 --retry-all-errors --insecure -sf ${{ inputs.server_health_url }} > /dev/null
         if [ -n "${{ inputs.server_ready_url }}" ]; then
-          curl --retry 60 --retry-delay 5 --retry-all-errors -sf ${{ inputs.server_ready_url }} > /dev/null
+          curl --retry 60 --retry-delay 5 --retry-all-errors --insecure -sf ${{ inputs.server_ready_url }} > /dev/null
         fi
       shell: bash
 
